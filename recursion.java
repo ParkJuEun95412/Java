@@ -275,7 +275,7 @@ int findMax(int [] data, int begin, int end) {
 }
 
 
-/* Binart Search
+/* Binary Search
 items[begin]에서 items[end]사이에서 target을 검색
 */
 
