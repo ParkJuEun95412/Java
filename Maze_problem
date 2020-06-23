@@ -1,0 +1,74 @@
+/* Maze 미로찾기 문제풀기
+(N-1,N-1)의 사각형의 입구에서 wall을 피해 pathway만을 이용하여 출구로 빠져나가는 경로
+Recursive Thinking
+현재 위치에서 출구까지 가는 경로가 있으려면
+1) 현재 위치가 출구이거나 혹은
+2) 이웃한 셀 들 중 하나에서 현재 위치를 지나지 않고 출구까지 가는 경우
+*/
+
+//미로찾기(Decision Problem: 답이 yes or no인 문제)
+
+// 재귀함수는 항상 무한 루프에 빠지지 않게 고민해야한다 -> 아래 식은 무한 루프에 빠질 수 있음
+boolean findPath(x,y)
+    if (x,y) is the exit
+        return true;//현재 위치 자체가 출구
+    else
+        for each neighbouring cell (x',y') of (x,y) do //최대 4개의 인접한 셀 각각에 대해서 
+            if (x',y') is on the pathway //현재 인접한 셀이 이동가능한 경로(pathway)인지 파악
+                if findPath(x',y')
+                    return true;
+        return false;
+
+//방문한 위치와 그렇지 않은 위치를 구분해서 무한 루프를 방지할 수 있다
+
+boolean findPath(x,y)
+    if (x,y) is the exit
+        return true;//현재 위치 자체가 출구
+    else
+        mark (x,y) as a visited cell;
+        for each neighbouring cell (x',y') of (x,y) do //최대 4개의 인접한 셀 각각에 대해서 
+            if (x',y') is on the pathway and not visited //현재 인접한 셀이 이동가능한 경로(pathway) 이고 방문하지 않은 셀인지 파악
+                if findPath(x',y')
+                    return true;
+        return false;
+//recursion의 호출횟수는 많아지지만 보다 간단
+boolean findPath(x,y)
+    if (x,y) is either on the wall or a visited cell
+        return false;
+    else (x,y) is the exit
+        return true;
+    else
+        mark (x,y) as a visited cell;
+        for each neighbouring cell (x',y') of (x,y) do 
+            if findPath(x',y')
+                return true;
+        return false;
+
+//class Maze
+
+public class Maze {
+    private static int n=8;
+    private static int [][] maze= {
+            {0,0,0,0,0,0,0,1},
+            {0,1,1,0,1,1,0,1},
+            {0,0,0,1,0,0,0,1},
+            {0,1,0,0,1,1,0,1},
+            {0,1,1,1,0,0,1,1},
+            {0,1,0,0,0,1,0,1},
+            {0,0,0,1,0,0,0,1},
+            {0,1,1,1,0,1,0,0}
+    };
+private static final int PATHWAY_COLOUR =0; //white
+private static final int WALL_COLOUR =1; //blue
+private static final int BLOCKED_COLOUR =2; //red 방문했지만 가면 안됌
+private static final int PATH_COLOUR =3; //green 방문했지만 아직 몰라
+    
+public static boolean findMazePath(int x, int y) {
+    if (x<0 || y<0 || x>=N || y>=N)
+        return false;
+    else if (maze[x][y] != PATHWAY_COLOUR)
+        return false;
+    else if (x==N-1 && y==N-1) {
+        maze[x][y] = PATH_COLOUR;
+        return true;
+    }
